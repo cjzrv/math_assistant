@@ -7,6 +7,8 @@
 - **允許自由提問**，保持對話上下文，讓 AI 持續與你交流 💬
 - **支援多種 LLM（Ollama、LM Studio、GPT-4o-mini），可選擇本地或雲端運行 🔥**
 
+![demo](./demo.gif)
+
 ---
 
 ## 🚀 支援的 LLM 部署方式
@@ -41,7 +43,7 @@ pip install requests
 ### **3️⃣ 下載數學題庫**
 我們使用 **Ape210K 數學題庫**（已整理成 JSON 格式）：
 ```bash
-wget -O ape210k_cleaned.json "https://your-link-to-json-file.com/ape210k_cleaned.json"
+wget -O ape210k_cleaned.json "https://raw.githubusercontent.com/cjzrv/math_assistant/refs/heads/main/ape210k_test.json"
 ```
 請確保 `ape210k_cleaned.json` 存在於專案目錄內。
 

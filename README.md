@@ -6,6 +6,8 @@ This is an **AI-powered math assistant chatbot** that helps with:
 - **Allowing follow-up questions**, keeping conversation context for a smooth learning experience 💬
 - **Supporting multiple LLM options (Ollama, LM Studio, GPT-4o-mini)** for both **local and cloud-based AI** 🔥
 
+![demo](./demo.gif)
+
 [Chinese README](./README_CN.md)
 
 ---
@@ -42,7 +44,7 @@ pip install requests
 ### **3️⃣ Download Math Dataset**
 We use **Ape210K**, a large-scale math problem dataset:
 ```bash
-wget -O ape210k_test.json "https://your-link-to-json-file.com/ape210k_cleaned.json"
+wget -O ape210k_test.json "https://raw.githubusercontent.com/cjzrv/math_assistant/refs/heads/main/ape210k_test.json"
 ```
 Ensure `ape210k_test.json` is present in your project directory.
 
