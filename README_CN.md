@@ -71,10 +71,13 @@ wget -O ape210k_cleaned.json "https://raw.githubusercontent.com/cjzrv/math_assis
 
 #### ✅ **LM Studio 本地 LLM**
 1. **下載 [LM Studio](https://lmstudio.ai/) 並安裝**
+
 2. **開啟 LM Studio 並啟動 API 服務**
    - 設定 `Local API Server` ✅
    - 預設端口為 `http://localhost:1234`
+
 3. **運行 LM Studio 版本**
+
    ```bash
    python math_assistant_lm_studio.py
    ```
@@ -83,12 +86,16 @@ wget -O ape210k_cleaned.json "https://raw.githubusercontent.com/cjzrv/math_assis
 
 #### ✅ **GPT-4o-mini（雲端 OpenAI API）**
 1. **註冊 OpenAI API 並獲取 API Key**
+
    - [API 註冊](https://platform.openai.com/signup/)
+
 2. **設置 API Key**
+
    ```bash
    export OPENAI_API_KEY="你的 API Key"
    ```
 3. **運行 GPT-4o-mini 版本**
+
    ```bash
    python math_assistant_gpt4o.py
    ```
@@ -130,5 +137,3 @@ wget -O ape210k_cleaned.json "https://raw.githubusercontent.com/cjzrv/math_assis
 - [OpenAI](https://openai.com/) 提供 GPT-4o-mini API 支援
 - [Ape210K](https://github.com/Chenny0808/ape210k) 開源數學題庫
 - [Mistral AI](https://mistral.ai/) 提供開源 LLM
-
-> 📌 **歡迎提供改進建議！如果你覺得這個專案有幫助，請記得 ⭐Star⭐ 它！**

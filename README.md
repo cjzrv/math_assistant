@@ -72,11 +72,14 @@ Ensure `ape210k_test.json` is present in your project directory.
 
 #### ✅ **LM Studio Local LLM**
 1. **Download & Install [LM Studio](https://lmstudio.ai/)**
+
 2. **Enable API in LM Studio**
    - Go to **Settings**
    - Enable **Local API Server**
    - Default API endpoint: `http://localhost:1234`
+
 3. **Run the LM Studio Version**
+
    ```bash
    python math_assistant_lm_studio.py
    ```
@@ -87,10 +90,12 @@ Ensure `ape210k_test.json` is present in your project directory.
 1. **Sign up for an OpenAI API key**
    - Register at [OpenAI API](https://platform.openai.com/signup/)
 2. **Set your API key**
+
    ```bash
    export OPENAI_API_KEY="your-api-key-here"
    ```
 3. **Run the GPT-4o-mini Version**
+
    ```bash
    python math_assistant_gpt4o.py
    ```
