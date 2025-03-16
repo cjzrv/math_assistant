@@ -4,7 +4,7 @@ import requests
 
 # 設定 Ollama API 參數
 OLLAMA_API_URL = "http://localhost:11434/api/chat"  # ✅ Ollama API 預設端口
-MODEL_NAME = "hf.co/bartowski/Mistral-Nemo-Instruct-2407-GGUF:Q4_K_M"  # ✅ 可以更換為你下載的模型，如 'llama3', 'gemma'
+MODEL_NAME = "hf.co/bartowski/Mistral-Nemo-Instruct-2407-GGUF:Q4_K_M"  # ✅ 你可以更換成 'llama3'、'gemma'、'phi' 等模型
 
 # 讀取標準 JSON 格式的 Ape210K 題庫
 with open("ape210k_test.json", "r", encoding="utf-8") as f:
@@ -19,31 +19,58 @@ def get_random_question(data):
         "equation": question["equation"]
     }
 
-# 使用 Ollama API 來處理對話（支援流式輸出）
-def chat_with_ollama(messages):
+# 呼叫 Ollama API 讓 LLM 判斷答案是否正確（支援流式輸出）
+def check_answer_with_llm(question, correct_answer, user_answer, chat_history):
+    prompt = f"""
+    這是一道小學數學題目：
+    問題：{question}
+
+    學生輸入的答案是：{user_answer}
+    正確答案應該是：{correct_answer}
+
+    你的任務：
+    1. 判斷學生的答案是否與正確答案相同，允許不同的單位（如「1.4米」和「1.4」）。
+    2. 忽略答案中文與數字的差異，如5與五份應視為相同。
+    3. 若答案正確，請回應：「✅ 你的答案正確！」。
+    4. 若答案錯誤，請回應：「❌ 你的答案錯誤，正確答案是 {correct_answer}。」，並解釋該題應如何解題。
+    """
+
+    messages = [
+        {"role": "system", "content": "你是一位小學數學老師，負責批改學生的答案並提供解釋。"},
+        {"role": "user", "content": prompt}
+    ]
+    messages.extend(chat_history)  # ✅ 保持上下文
+
     payload = {
         "model": MODEL_NAME,
         "messages": messages,
         "stream": True  # ✅ 啟用流式輸出
     }
 
-    response = requests.post(OLLAMA_API_URL, json=payload, stream=True)
+    with requests.post(OLLAMA_API_URL, json=payload, stream=True) as response:
+        print("\n📖 LLM 判斷結果：", end="", flush=True)
+        llm_response = ""
 
-    print("\n📖 Ollama 回答：", end="", flush=True)
-    for line in response.iter_lines():
-        if line:
-            try:
-                data = json.loads(line)
-                content = data["message"]["content"]
-                print(content, end="", flush=True)
-            except json.JSONDecodeError:
-                continue  # ✅ 忽略無效的 JSON 行
-    print("\n")  # ✅ 確保輸出換行
+        for line in response.iter_lines():
+            if line:
+                try:
+                    data = json.loads(line)
+                    content = data["message"]["content"]
+                    print(content, end="", flush=True)
+                    llm_response += content
+                except json.JSONDecodeError:
+                    continue
+
+        print("\n")
+    
+    # ✅ 將這次的對話記錄加入 chat_history
+    chat_history.append({"role": "user", "content": user_answer})
+    chat_history.append({"role": "assistant", "content": llm_response})
 
 # 主程式
 if __name__ == "__main__":
     print("\n🎓 歡迎來到小學生數學輔助系統！")
-    print("🔹 你可以輸入你的答案，Ollama 會幫你檢查正確性。")
+    print("🔹 你可以輸入你的答案，LLM 會幫你檢查正確性。")
     print("🔹 如果有其他問題，也可以繼續提問！")
     print("🔹 按 `Ctrl+C` 或 `Ctrl+D` 退出程式。\n")
 
@@ -52,31 +79,55 @@ if __name__ == "__main__":
             sample_question = get_random_question(data)
             print("\n📌 題目:", sample_question["question"])
 
-            # 初始化對話上下文
-            messages = [
-                {"role": "system", "content": "你是一位小學數學老師，負責批改學生的答案並提供解釋。"},
-                {"role": "user", "content": f"這是一道小學數學題目：{sample_question['question']}"},
-            ]
+            chat_history = []  # ✅ 每道題目重置歷史紀錄
 
             # 讓使用者輸入答案
             user_answer = input("✏️ 請輸入你的答案： ")
 
-            # 加入學生的回答
-            messages.append({"role": "user", "content": f"我的答案是：{user_answer}"})
+            # 讓 LLM 幫助判斷答案是否正確（流式輸出）
+            check_answer_with_llm(
+                sample_question["question"],
+                sample_question["answer"],
+                user_answer,
+                chat_history
+            )
 
-            # 讓 Ollama 幫助判斷答案是否正確（流式輸出）
-            messages.append({"role": "user", "content": f"這道題的正確答案是 {sample_question['answer']}。請判斷我的答案是否正確，並提供詳細解釋。"})
-
-            chat_with_ollama(messages)  # ✅ 使用 Ollama API 回答問題
-
-            # 允許使用者繼續提問，並維持上下文
+            # 允許使用者繼續提問，並保持上下文
             while True:
                 follow_up = input("\n💡 你還有其他問題嗎？(輸入問題或按 Enter 讓我出新題目)： ").strip()
                 if follow_up == "":
                     break  # 讓系統出下一道題目
                 else:
-                    messages.append({"role": "user", "content": follow_up})  # ✅ 保留對話上下文
-                    chat_with_ollama(messages)  # ✅ 使用上下文回答
+                    # ✅ 將對話上下文加回 LLM，保持連貫性
+                    chat_history.append({"role": "user", "content": follow_up})
+
+                    payload = {
+                        "model": MODEL_NAME,
+                        "messages": [
+                            {"role": "system", "content": "你是一位小學數學老師，專門幫助學生學習。"}
+                        ] + chat_history,
+                        "temperature": 0.7,
+                        "stream": True  # ✅ 啟用流式輸出
+                    }
+
+                    with requests.post(OLLAMA_API_URL, json=payload, stream=True) as response:
+                        print("\n📖 LLM 回答：", end="", flush=True)
+                        llm_response = ""
+
+                        for line in response.iter_lines():
+                            if line:
+                                try:
+                                    data = json.loads(line)
+                                    content = data["message"]["content"]
+                                    print(content, end="", flush=True)
+                                    llm_response += content
+                                except json.JSONDecodeError:
+                                    continue
+
+                        print("\n")
+
+                    # ✅ 把 LLM 的回答加回 chat_history
+                    chat_history.append({"role": "assistant", "content": llm_response})
 
     except (KeyboardInterrupt, EOFError):
         print("\n📚 感謝使用學習系統，再見！👋")
