@@ -63,6 +63,8 @@ Ensure `ape210k_test.json` is present in your project directory.
    ollama pull hf.co/bartowski/Mistral-Nemo-Instruct-2407-GGUF:Q4_K_M  # or use llama3, gemma
    ```
 
+   https://huggingface.co/bartowski/Mistral-Nemo-Instruct-2407-GGUF
+
 3. **Run the Ollama Version**
    ```bash
    python math_assistant_ollama.py
@@ -73,12 +75,15 @@ Ensure `ape210k_test.json` is present in your project directory.
 #### ✅ **LM Studio Local LLM**
 1. **Download & Install [LM Studio](https://lmstudio.ai/)**
 
-2. **Enable API in LM Studio**
+2. **Download an LLM Model**  
+https://huggingface.co/bartowski/Mistral-Nemo-Instruct-2407-GGUF
+
+3. **Enable API in LM Studio**
    - Go to **Settings**
    - Enable **Local API Server**
    - Default API endpoint: `http://localhost:1234`
 
-3. **Run the LM Studio Version**
+4. **Run the LM Studio Version**
 
    ```bash
    python math_assistant_lm_studio.py

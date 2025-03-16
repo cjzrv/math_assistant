@@ -61,6 +61,7 @@ wget -O ape210k_test.json "https://raw.githubusercontent.com/cjzrv/math_assistan
    ```bash
    ollama pull hf.co/bartowski/Mistral-Nemo-Instruct-2407-GGUF:Q4_K_M  # 或者使用 llama3, gemma 可自行於程式內修改
    ```
+   https://huggingface.co/bartowski/Mistral-Nemo-Instruct-2407-GGUF
 
 3. **運行 Ollama 版本**
    ```bash
@@ -72,11 +73,14 @@ wget -O ape210k_test.json "https://raw.githubusercontent.com/cjzrv/math_assistan
 #### ✅ **LM Studio 本地 LLM**
 1. **下載 [LM Studio](https://lmstudio.ai/) 並安裝**
 
-2. **開啟 LM Studio 並啟動 API 服務**
+2. **下載 LLM 模型**  
+https://huggingface.co/bartowski/Mistral-Nemo-Instruct-2407-GGUF
+
+3. **開啟 LM Studio 並啟動 API 服務**
    - 設定 `Local API Server` ✅
    - 預設端口為 `http://localhost:1234`
 
-3. **運行 LM Studio 版本**
+4. **運行 LM Studio 版本**
 
    ```bash
    python math_assistant_lm_studio.py
