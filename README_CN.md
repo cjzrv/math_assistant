@@ -43,9 +43,9 @@ pip install requests
 ### **3️⃣ 下載數學題庫**
 我們使用 **Ape210K 數學題庫**（已整理成 JSON 格式）：
 ```bash
-wget -O ape210k_cleaned.json "https://raw.githubusercontent.com/cjzrv/math_assistant/refs/heads/main/ape210k_test.json"
+wget -O ape210k_test.json "https://raw.githubusercontent.com/cjzrv/math_assistant/refs/heads/main/ape210k_test.json"
 ```
-請確保 `ape210k_cleaned.json` 存在於專案目錄內。
+請確保 `ape210k_test.json` 存在於專案目錄內。
 
 ---
 
